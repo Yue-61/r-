@@ -104,3 +104,10 @@ b <- unique_b[rank_b <= 1000] ##creat a vector b containing the 1000 most common
 print(b)
 vector_6 <- match(a,b)
 print(vector_6)
+n <- length(a)
+mlag <- 4
+M <- matrix(nrow = n - mlag, ncol = mlag + 1) ##creat a matrix M
+for (j in 0:mlag) {
+  M[, j + 1] <- token_vector[(1 + j):(n - mlag + j)]
+}
+print(M)
