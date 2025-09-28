@@ -102,5 +102,5 @@ rank_b <- rank(counts,ties.method = "first") ## rank the counts
 print(rank_b)
 b <- unique_b[rank_b <= 1000] ##creat a vector b containing the 1000 most common words
 print(b)
-vector_6 <- match(b,a)
+vector_6 <- match(a,b)
 print(vector_6)
