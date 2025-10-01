@@ -102,9 +102,13 @@ rank_b <- rank(counts,ties.method = "first") ## rank the counts
 print(rank_b)
 b <- unique_b[rank_b <= 1000] ##creat a vector b containing the 1000 most common words
 print(b)
-token_vector <- match(a,b)
+
+
+token_vector <- match(clean_a7,b)
 print(token_vector)
-n <- length(a)
+
+
+n <- length(clean_a7)
 mlag <- 4
 M <- matrix(nrow = n - mlag, ncol = mlag + 1) ##creat a matrix M
 for (j in 0:mlag) {
