@@ -187,3 +187,81 @@ for (j in 0:mlag) {
   M[, j + 1] <- token_vector[(1 + j):(n - mlag + j)]
 }
 print(M)
+#7
+next.word <- function(key, M, M1, w = rep(1, ncol(M) - 1)) {
+  mlag <- ncol(M) - 1   # 最大序列长度
+  key_len <- length(key)
+  
+  if (key_len > mlag) {
+    key <- tail(key, mlag)
+    key_len <- mlag
+  }
+  
+  u_all <- c()
+  prob_all <- c()
+  
+  # 从最长序列往下逐步缩短
+  for (i in seq_len(key_len)) {
+    mc <- mlag - key_len + i   # 起始列
+    sub_key <- key[i:key_len]
+    
+    # 找到匹配的行
+    ii <- colSums(!(t(M[, mc:mlag, drop=FALSE]) == sub_key))
+    match_rows <- which(ii == 0 & is.finite(ii))
+    
+    if (length(match_rows) > 0) {
+      u <- M[match_rows, mlag + 1]   # 收集后续词
+      u <- u[!is.na(u)]              # 去掉 NA
+      if (length(u) > 0) {
+        prob <- rep(w[key_len - i + 1] / length(u), length(u))
+        u_all <- c(u_all, u)
+        prob_all <- c(prob_all, prob)
+      }
+    }
+  }
+  
+  # 如果找不到匹配随机选一个常见词
+  if (length(u_all) == 0) {
+    u_all <- M1[!is.na(M1)]
+    prob_all <- rep(1 / length(u_all), length(u_all))
+  }
+  
+  # 按概率采样一个 token
+  next_token <- sample(u_all, 1, prob = prob_all)
+  return(next_token)
+}
+#8
+# 随机选择一个非标点符号的词作为起始词
+start_token <- sample(M1[!is.na(M1)], 1)
+print(start_token)
+print(b[start_token])  # 查看对应的单词
+#9
+simulate_sentence <- function(start_token, M, M1, b, w = rep(1, ncol(M) - 1)) {
+  key <- start_token
+  sentence_tokens <- key
+  
+  repeat {
+    new_token <- next.word(key, M, M1, w)
+    sentence_tokens <- c(sentence_tokens, new_token)
+    
+    # 更新 key，始终保持最后 (mlag) 个 token
+    mlag <- ncol(M) - 1
+    if (length(key) >= mlag) {
+      key <- c(key[-1], new_token)
+    } else {
+      key <- c(key, new_token)
+    }
+    
+    # 如果生成句号（"."），结束
+    if (!is.na(new_token) && b[new_token] == ".") {
+      break
+    }
+  }
+  
+  # 转换回单词
+  sentence <- paste(b[sentence_tokens], collapse=" ")
+  return(sentence)
+}
+
+
+
