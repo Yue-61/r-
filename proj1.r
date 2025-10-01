@@ -146,7 +146,12 @@ next.word <- function(key, M, M1, w = rep(1, ncol(M) - 1)) {
   }
   
   # 按概率采样一个 token
-  next_token <- sample(u_all, 1, prob = prob_all)
+  if (length(u_all) == 1) {
+    next_token <- u_all[1]
+  } else {
+    idx <- sample.int(length(u_all), 1, prob = prob_all)
+    next_token <- u_all[idx]
+  }
   return(next_token)
 }
 #8
@@ -177,6 +182,7 @@ simulate_sentence <- function(start_token, M, M1, b,
   sentence <- paste(b[sentence_tokens], collapse=" ")
   return(sentence)
 }
+
 result <- simulate_sentence(start_token, M, M1, b)
 print(result)
 
