@@ -45,51 +45,7 @@ print(clean_a2)
 clean_a3 <- gsub("-", "", clean_a2)
 clean_a4 <- gsub("_", "", clean_a3)
 print(clean_a4)
-#4(d)
-split_punct <- function(words, punct) {
-  # 构造正则表达式，匹配指定的标点符号
-  pattern <- paste0("[", paste(punct, collapse=""), "]")
-  # 找出所有含有标点的单词位置
-  punct_idx <- grep(pattern, words)
-  # 计算结果向量的长度：不含标点的保留一个位置，含标点的占两个位置
-  total_len <- length(words) + length(punct_idx)
-  # 初始化结果向量
-  result <- rep("", total_len)
-  index <- 1
-  # 遍历每个单词
-  for (i in seq_along(words)) {
-    if (i %in% punct_idx) {
-      # 如果单词包含标点，去除标点
-      clean_word <- gsub(pattern, "", words[i])
-      # 提取单词中的标点字符（逗号或句号）
-      punct_char <- gsub(paste0("[^", paste(punct, collapse=""), "]"), "", words[i])
-      # 将去除标点后的单词和标点分别插入结果
-      result[index] <- clean_word
-      result[index+1] <- punct_char
-      index <- index + 2
-    } else {
-      # 不含标点的单词直接插入
-      result[index] <- words[i]
-      index <- index + 1
-    }
-  }
-  return(result)
-}
-# 定义标点符号向量
-punct <- c(",", ".")
-# 调用函数，把 cleana 和 punct 传进去
-clean_a5 <- split_punct(clean_a4, punct)
-# 查看结果
-print(clean_a5)
-#4(f)
-punct <- c(";", "!", ":","?" )
-# 调用函数，把 cleana 和 punct 传进去
-clean_a6 <- split_punct(clean_a5, punct)
-# 查看结果
-print(clean_a6)
-#4(g)
-clean_a7 <- tolower(clean_a6)
-print(clean_a7)
+
 
 #4(d)
 split_punct_efficient <- function(words, punctuation) {
@@ -192,14 +148,22 @@ split_punct_efficient <- function(words, punctuation) {
 input_punc <- c(",", ".") 
 
 # 调用函数
-output_words <- split_punct_efficient(clean_a4, input_punc)
-
-# 打印结果
-# 期望输出: "An" "omnishambles" "," "in" "a" "headless" "chicken" "factory" "."
-print(output_words)
+clean_a5 <- split_punct_efficient(clean_a4, input_punc)
 
 
+print(clean_a5)
+#4(f)
+punct <- c(";", "!", ":","?" )
+# 调用函数，把 cleana 和 punct 传进去
+clean_a6 <- split_punct(clean_a5, punct)
+# 查看结果
+print(clean_a6)
+#4(g)
+clean_a7 <- tolower(clean_a6)
+print(clean_a7)
 
+
+#(5)(6)
 unique_b <- unique(clean_a7) ## find the vector of unique words
 print(unique_b)
 index_vector <- match(clean_a7,unique_b) ## find the position of each element of clean_a7 in unique_b
