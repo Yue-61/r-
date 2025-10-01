@@ -263,6 +263,9 @@ simulate_sentence <- function(start_token, M, M1, b, w = rep(1, ncol(M) - 1)) {
   sentence <- paste(b[sentence_tokens], collapse=" ")
   return(sentence)
 }
+result <- simulate_sentence(start_token, M, M1, b)
+print(result)
+
 
 
 
