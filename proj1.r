@@ -155,15 +155,15 @@ start_token <- sample(M1[!is.na(M1)], 1)
 print(start_token)
 print(b[start_token])
 #9
-simulate_sentence <- function(start_token, M, M1, b, w = rep(1, ncol(M) - 1)) {
+simulate_sentence <- function(start_token, M, M1, b, 
+                              w = rep(1, ncol(M) - 1), max_len = 50) {
   key <- start_token
   sentence_tokens <- key
   
-  repeat {
+  for (step in 1:max_len) {   # 限制最多生成 max_len 个词
     new_token <- next.word(key, M, M1, w)
     sentence_tokens <- c(sentence_tokens, new_token)
     
-    # 更新 key，始终保持最后 (mlag) 个 token
     mlag <- ncol(M) - 1
     if (length(key) >= mlag) {
       key <- c(key[-1], new_token)
@@ -171,13 +171,9 @@ simulate_sentence <- function(start_token, M, M1, b, w = rep(1, ncol(M) - 1)) {
       key <- c(key, new_token)
     }
     
-    # 如果生成句号（"."），结束
-    if (!is.na(new_token) && b[new_token] == ".") {
-      break
-    }
+    if (!is.na(new_token) && b[new_token] == ".") break
   }
   
-  # 转换回单词
   sentence <- paste(b[sentence_tokens], collapse=" ")
   return(sentence)
 }
