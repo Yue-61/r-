@@ -71,7 +71,7 @@ split_punct <- function(words, punct = c(",", ".", ";", "!", ":", "?")) {
   }
   unlist(out, use.names = FALSE)
 }
-
+punct = c(",", ".", ";", "!", ":", "?")
 
 clean_a5 <- split_punct(clean_a4, punct)
 print(clean_a5)
