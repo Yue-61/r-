@@ -188,6 +188,7 @@ for (j in 0:mlag) {
 }
 print(M)
 #7
+M1 <- token_vector
 next.word <- function(key, M, M1, w = rep(1, ncol(M) - 1)) {
   mlag <- ncol(M) - 1   # 最大序列长度
   key_len <- length(key)
@@ -231,10 +232,10 @@ next.word <- function(key, M, M1, w = rep(1, ncol(M) - 1)) {
   return(next_token)
 }
 #8
-# 随机选择一个非标点符号的词作为起始词
+# 随机选择一个非标点符号的词作为起始词、
 start_token <- sample(M1[!is.na(M1)], 1)
 print(start_token)
-print(b[start_token])  # 查看对应的单词
+print(b[start_token])
 #9
 simulate_sentence <- function(start_token, M, M1, b, w = rep(1, ncol(M) - 1)) {
   key <- start_token
@@ -262,6 +263,9 @@ simulate_sentence <- function(start_token, M, M1, b, w = rep(1, ncol(M) - 1)) {
   sentence <- paste(b[sentence_tokens], collapse=" ")
   return(sentence)
 }
+
+
+
 
 
 
