@@ -1,4 +1,9 @@
-setwd("C:/Users/lenovo/Desktop") ## comment out of submitted
+#After studying the Markov model in the document together, the group divided the programming tasks. Fang Zige was mainly responsible for Step 4, 
+#but during this process, Tang Yue also contributed by strengthening the logic and improving completeness. Steps 5 and 6 were primarily completed by Tang Yue, 
+#with Fang Zige also helping to refine this part. Zhou Danni was mainly responsible for Steps 7, 8, and 9.
+#After an initial simple merge, the group found that the code still had issues. Through everyone’s joint effort, the code was continuously simplified and improved,
+#and the final result is as follows:
+#setwd("C:/Users/lenovo/Desktop") ## comment out of submitted
 a <- scan("pg100.txt",what="character",skip=83,nlines=196043-83,
           fileEncoding="UTF-8")
 
