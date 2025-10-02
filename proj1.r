@@ -186,6 +186,31 @@ simulate_sentence <- function(start_token, M, M1, b,
 result <- simulate_sentence(start_token, M, M1, b)
 print(result)
 
+#(5)(6)
+b <- unique(clean_a7)
+
+# (b) 使用 match 找 a 中每个元素对应 b 的索引
+index <- match(clean_a7, b)
+
+# (c) 使用 tabulate 统计每个唯一单词出现次数
+counts <- tabulate(index)
+
+# (d) 创建包含约1000个最常见单词的向量 b_top
+# 利用 rank 找频率最高的单词
+top_n <- 1000
+if(length(counts) < top_n) {
+  top_n <- length(counts)
+}
+# 频率越大 rank 越小，先对 counts 排序取前 top_n 个
+ranks <- rank(-counts, ties.method = "first")  # 负号使频率高的排名靠前
+b_top <- b[ranks <= top_n]
+
+# 输出结果
+print(b)
+print(index)
+print(counts)
+print(b_top)
+
 
 
 
