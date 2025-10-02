@@ -92,21 +92,23 @@ a <- tolower(a) # convert vector a to lower case
 
 #5
 unique_b <- unique(a) ## find the vector of unique words
-print(unique_b)
+
 index_vector <- match(a,unique_b) ## find the position of each element of clean_a7 in unique_b
-print(index_vector)
+
 counts <- tabulate(index_vector) ## count up how many time each unique word occurs
-print(counts)
+
 rank_b <- rank(counts,ties.method = "first") ## rank the counts
-print(rank_b)
+
 b <- unique_b[rank_b <= 1000] ## creat a vector b containing the 1000 most common words
 print(b)
 
 #6
 token_vector <- match(a,b)
-print(token_vector)
+
 n <- length(a)
+
 mlag <- 4
+
 M <- matrix(nrow = n - mlag, ncol = mlag + 1) ## creat a matrix M
 for (j in 0:mlag) {
   M[, j + 1] <- token_vector[(1 + j):(n - mlag + j)]
