@@ -90,29 +90,34 @@ print(a)
 
 
 #(5)(6)
-unique_b <- unique(clean_a7) ## find the vector of unique words
+unique_b <- unique(a) ## find the vector of unique words
 print(unique_b)
-index_vector <- match(clean_a7,unique_b) ## find the position of each element of clean_a7 in unique_b
+index_vector <- match(a,unique_b) ## find the position of each element of clean_a7 in unique_b
 print(index_vector)
 counts <- tabulate(index_vector) ## count up how many time each unique word occurs
 print(counts)
+top_n <- 1000
+if(length(counts) < top_n) {
+  top_n <- length(counts)
+}
 rank_b <- rank(counts,ties.method = "first") ## rank the counts
 print(rank_b)
-b <- unique_b[rank_b <= 1000] ##creat a vector b containing the 1000 most common words
+b <- unique_b[rank_b <= top_n] ##creat a vector b containing the 1000 most common words
 print(b)
 
-
-token_vector <- match(clean_a7,b)
+token_vector <- match(a,b)
 print(token_vector)
 
-
-n <- length(clean_a7)
+n <- length(a)
 mlag <- 4
 M <- matrix(nrow = n - mlag, ncol = mlag + 1) ##creat a matrix M
 for (j in 0:mlag) {
   M[, j + 1] <- token_vector[(1 + j):(n - mlag + j)]
 }
 print(M)
+
+
+
 #7
 M1 <- token_vector
 next.word <- function(key, M, M1, w = rep(1, ncol(M) - 1)) {
@@ -193,31 +198,6 @@ simulate_sentence <- function(start_token, M, M1, b,
 
 result <- simulate_sentence(start_token, M, M1, b)
 print(result)
-
-#(5)(6)
-b <- unique(clean_a7)
-
-# (b) 使用 match 找 a 中每个元素对应 b 的索引
-index <- match(clean_a7, b)
-
-# (c) 使用 tabulate 统计每个唯一单词出现次数
-counts <- tabulate(index)
-
-# (d) 创建包含约1000个最常见单词的向量 b_top
-# 利用 rank 找频率最高的单词
-top_n <- 1000
-if(length(counts) < top_n) {
-  top_n <- length(counts)
-}
-# 频率越大 rank 越小，先对 counts 排序取前 top_n 个
-ranks <- rank(-counts, ties.method = "first")  # 负号使频率高的排名靠前
-b_top <- b[ranks <= top_n]
-
-# 输出结果
-print(b)
-print(index)
-print(counts)
-print(b_top)
 
 
 
