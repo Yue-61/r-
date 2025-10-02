@@ -25,7 +25,6 @@ for (i in open_idx) {
 
 a <- a[-unique(stage_idx)]
 
-#print(clean_a1)
 
 #4(b)
 
@@ -40,13 +39,11 @@ is_number <- grepl("^[0-9]+$", a) # identify words that are purely numerical
 to_remove <- (is_upper & only_letters & not_special) | is_number # find the content that needs to be deleted
 
 a <- a[!to_remove]
-#print(clean_a2)
 
 #4(c)
 a <- gsub("-", "", a) # delete "-"
 a <- gsub("_", "", a) # delete "_"
-a <- gsub("—", "", a)
-#print(clean_a4)
+a <- gsub("—", "", a) # delete "—"
 
 
 #(4de)
@@ -83,11 +80,9 @@ split_punct <- function(words, punct) # words: vector of words, punct: vector of
 
 punct = c(",", ".", ";", "!", ":", "?") # input the punctuation marks to be separated
 a <- split_punct(a, punct)
-#print(clean_a5)
 
 #4(f)
 a <- tolower(a) # convert vector a to lower case
-print(a)
 
 
 #(5)(6)
