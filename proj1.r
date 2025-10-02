@@ -96,13 +96,9 @@ index_vector <- match(a,unique_b) ## find the position of each element of clean_
 print(index_vector)
 counts <- tabulate(index_vector) ## count up how many time each unique word occurs
 print(counts)
-top_n <- 1000
-if(length(counts) < top_n) {
-  top_n <- length(counts)
-}
 rank_b <- rank(counts,ties.method = "first") ## rank the counts
 print(rank_b)
-b <- unique_b[rank_b <= top_n] ##creat a vector b containing the 1000 most common words
+b <- unique_b[rank_b <= 1000] ##creat a vector b containing the 1000 most common words
 print(b)
 
 token_vector <- match(a,b)
