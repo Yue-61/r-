@@ -43,8 +43,8 @@ a <- a[!to_remove]
 #print(clean_a2)
 
 #4(c)
-a <- gsub("-", "", a) # delete "-"
 a <- gsub("_", "", a) # delete "_"
+a <- gsub("—", "", a) # delete "—"
 #print(clean_a4)
 
 
