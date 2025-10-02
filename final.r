@@ -94,7 +94,7 @@ counts <- tabulate(index_vector) ## count up how many time each unique word occu
 print(counts)
 rank_b <- rank(counts,ties.method = "first") ## rank the counts
 print(rank_b)
-b <- unique_b[rank_b <= 1000] ##creat a vector b containing the 1000 most common words
+b <- unique_b[rank_b <= 1000] ## creat a vector b containing the 1000 most common words
 print(b)
 
 #6
@@ -102,7 +102,7 @@ token_vector <- match(a,b)
 print(token_vector)
 n <- length(a)
 mlag <- 4
-M <- matrix(nrow = n - mlag, ncol = mlag + 1) ##creat a matrix M
+M <- matrix(nrow = n - mlag, ncol = mlag + 1) ## creat a matrix M
 for (j in 0:mlag) {
   M[, j + 1] <- token_vector[(1 + j):(n - mlag + j)]
 }
