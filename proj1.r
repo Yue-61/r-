@@ -2,83 +2,91 @@ setwd("D:/") ## comment out of submitted
 a <- scan("pg100.txt",what="character",skip=83,nlines=196043-83,
           fileEncoding="UTF-8")
 
-print(a)
+#4(a)
 open_idx <- grep("\\[", a)
 
 stage_idx <- integer(0)  # to store all indices to remove
 
 for (i in open_idx) {
-  # look ahead max 100 words (or until end of text)
-  search_range <- (i+1):min(i+100, length(a))
+ 
+  search_range <- (i+1):min(i+100, length(a))  # look ahead max 100 words (or until end of text)
   
-  # find closing bracket
-  close_idx <- grep("\\]", a[search_range])
+
+  close_idx <- grep("\\]", a[search_range]) # find closing bracket
   
   if (length(close_idx) > 0) {
-    # matched closing bracket found → record full span
-    stage_idx <- c(stage_idx, i:(i + close_idx[1]))
+
+    stage_idx <- c(stage_idx, i:(i + close_idx[1])) # matched closing bracket found → record full span
   } else {
-    # unmatched [ → record from [ onward (decide policy)
-    stage_idx <- c(stage_idx, i)
+    
+    stage_idx <- c(stage_idx, i) # unmatched [ → record from [ onward (decide policy)
   }
 }
 
-clean_a1 <- a[-unique(stage_idx)]
+a <- a[-unique(stage_idx)]
 
-print(clean_a1)
+#print(clean_a1)
 
 #4(b)
-#找出是全大写的单词
-is_upper <- clean_a1 == toupper(clean_a1)
-#找出只包含大写字母的单词（不包括标点或数字）
-only_letters <- grepl("^[A-Z]+$", clean_a1)
-#排除特殊情况 "I" 和 "A"
-not_special <- !(clean_a1 %in% c("I", "A"))
-#找出是纯数字的单词
-is_number <- grepl("^[0-9]+$", clean_a1)
-#找出需要删除的内容（大写但不是 "I"/"A"，或者是数字）
-to_remove <- (is_upper & only_letters & not_special) | is_number
-#保留不是 to_remove 的内容
-clean_a2 <- clean_a1[!to_remove]
-print(clean_a2)
+
+is_upper <- a == toupper(a) # identify words that are entirely uppercase
+
+only_letters <- grepl("^[A-Z]+$", a) # find words that contain only uppercase letters.
+
+not_special <- !(a %in% c("I", "A")) # excluding special cases “I” and “A”
+
+is_number <- grepl("^[0-9]+$", a) # identify words that are purely numerical
+
+to_remove <- (is_upper & only_letters & not_special) | is_number # find the content that needs to be deleted
+
+a <- a[!to_remove]
+#print(clean_a2)
+
 #4(c)
-clean_a3 <- gsub("-", "", clean_a2)
-clean_a4 <- gsub("_", "", clean_a3)
-print(clean_a4)
+a <- gsub("-", "", a) # delete "-"
+a <- gsub("_", "", a) # delete "_"
+#print(clean_a4)
 
 
-#(4df)Define split_punct function
-# Function: split_punct
-# Purpose: Separate punctuation marks from attached words
-# Input: 
-#   - words: vector of words (some may have attached punctuation)
-#   - punct: vector of punctuation marks to separate (default: common English punctuation)
-# Output: vector with punctuation separated as individual elements
-split_punct <- function(words, punct = c(",", ".", ";", "!", ":", "?")) {
-  out <- vector("list", length(words)) #Create a list with same length as input words
-  for (i in seq_along(words)) { 
-    w <- words[i]; chars <- strsplit(w, "")[[1]] #Split the word into individual characters for inspection
-    
-    if (!any(chars %in% punct)) out[[i]] <- w #Check if the word contains any of the specified punctuation marks
-    else {  
-      keep <- chars[!(chars %in% punct)] #Non-punctuation characters (to be kept as part of the word)
-      pnts <- chars[chars %in% punct] #Punctuation characters (to be separated)
-      
-      core <- paste(keep, collapse = "") #Reconstruct the word core from non-punctuation characters
-      
-      if (nzchar(core)) out[[i]] <- c(core, pnts) else out[[i]] <- pnts #Handle the case where the word consists only of punctuation
-    }
-  }
-  unlist(out, use.names = FALSE)
+#(4de)
+split_punct <- function(words, punct) # words: vector of words, punct: vector of punctuation marks to separate 
+  {
+
+  punct_esc <- paste0("\\", punct, collapse = "")
+  pattern <- paste0("[", punct_esc, "]")
+  
+ 
+  idx <- grep(pattern, words) # identify words containing punctuation marks in the index
+  
+  
+  result <- words[-idx] # copy words without punctuation marks
+  
+ 
+  words_no_punct <- gsub(pattern, "", words[idx]) # remove punctuation marks with gsub function
+  
+  punct_found <- regmatches(words[idx], regexpr(pattern, words[idx])) # use grep function to extract punctuation marks
+  
+
+  final_result <- character(length(words) + length(idx))
+  
+
+  final_result[-( (length(words)+1 - length(result)) : length(final_result))] <- words[-idx] # replace the words without punctuation marks in their original positions
+  
+
+  final_result[rep(idx*2-1, each=1)] <- words_no_punct # insert the split words into their corresponding positions
+  final_result[rep(idx*2, each=1)] <- punct_found # insert the split punctuation marks into their corresponding positions
+  
+ 
+  final_result[final_result != ""]
 }
-punct = c(",", ".", ";", "!", ":", "?")
 
-clean_a5 <- split_punct(clean_a4, punct)
-print(clean_a5)
+punct = c(",", ".", ";", "!", ":", "?") # input the punctuation marks to be separated
+a <- split_punct(a, punct)
+#print(clean_a5)
 
-#4(g)
-clean_a7 <- tolower(clean_a5)
-print(clean_a7)
+#4(f)
+a <- tolower(a) # convert vector a to lower case
+print(a)
 
 
 #(5)(6)
