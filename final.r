@@ -113,50 +113,44 @@ for (j in 0:mlag) {
 }
 print(M)
 
-
-
 #7
 M1 <- token_vector
 next.word <- function(key, M, M1, w = rep(1, ncol(M) - 1)) {
-  mlag <- ncol(M) - 1   # 最大序列长度
+  mlag <- ncol(M) - 1   # maximum sequence length
   key_len <- length(key)
   
   if (key_len > mlag) {
-    key <- tail(key, mlag)
+    key <- tail(key, mlag)   # keep only the last mlag tokens
     key_len <- mlag
   }
   
   u_all <- c()
   prob_all <- c()
   
-  # 从最长序列往下逐步缩短
-  for (i in seq_len(key_len)) {
-    mc <- mlag - key_len + i   # 起始列
+  for (i in seq_len(key_len)) {   # gradually shorten from the longest sequence
+    mc <- mlag - key_len + i   # starting column
     sub_key <- key[i:key_len]
     
-    # 找到匹配的行
-    ii <- colSums(!(t(M[, mc:mlag, drop=FALSE]) == sub_key))
+    ii <- colSums(!(t(M[, mc:mlag, drop=FALSE]) == sub_key))   # find matching rows
     match_rows <- which(ii == 0 & is.finite(ii))
     
     if (length(match_rows) > 0) {
-      u <- M[match_rows, mlag + 1]   # 收集后续词
-      u <- u[!is.na(u)]              # 去掉 NA
+      u <- M[match_rows, mlag + 1]   # collect subsequent words
+      u <- u[!is.na(u)]              # remove NA
       if (length(u) > 0) {
-        prob <- rep(w[key_len - i + 1] / length(u), length(u))
+        prob <- rep(w[key_len - i + 1] / length(u), length(u))   # assign probability
         u_all <- c(u_all, u)
         prob_all <- c(prob_all, prob)
       }
     }
   }
   
-  # 如果找不到匹配随机选一个常见词
-  if (length(u_all) == 0) {
+  if (length(u_all) == 0) {   # if no match found, randomly choose a common word
     u_all <- M1[!is.na(M1)]
     prob_all <- rep(1 / length(u_all), length(u_all))
   }
   
-  # 按概率采样一个 token
-  if (length(u_all) == 1) {
+  if (length(u_all) == 1) {   # sample one token according to probability
     next_token <- u_all[1]
   } else {
     idx <- sample.int(length(u_all), 1, prob = prob_all)
@@ -164,34 +158,39 @@ next.word <- function(key, M, M1, w = rep(1, ncol(M) - 1)) {
   }
   return(next_token)
 }
+
 #8
-# 随机选择一个非标点符号的词作为起始词、
-start_token <- sample(M1[!is.na(M1)], 1)
+start_token <- sample(M1[!is.na(M1)], 1)   # randomly select a non-punctuation word as the starting word
 print(start_token)
 print(b[start_token])
+
 #9
 simulate_sentence <- function(start_token, M, M1, b, 
-                              w = rep(1, ncol(M) - 1), max_len = 50) {
-  key <- start_token
-  sentence_tokens <- key
+w = rep(1, ncol(M) - 1), max_len = 50) {
+key <- start_token
+sentence_tokens <- key
   
-  for (step in 1:max_len) {   # 限制最多生成 max_len 个词
+for (step in 1:max_len) {   # limit maximum of max_len generated words
     new_token <- next.word(key, M, M1, w)
     sentence_tokens <- c(sentence_tokens, new_token)
     
     mlag <- ncol(M) - 1
     if (length(key) >= mlag) {
-      key <- c(key[-1], new_token)
+      key <- c(key[-1], new_token)   # maintain sliding window of length mlag
     } else {
       key <- c(key, new_token)
     }
     
-    if (!is.na(new_token) && b[new_token] == ".") break
+    if (!is.na(new_token) && b[new_token] == ".") break   # stop if end of sentence
   }
   
-  sentence <- paste(b[sentence_tokens], collapse=" ")
+  sentence <- paste(b[sentence_tokens], collapse=" ")   # convert tokens to sentence
   return(sentence)
 }
 
 result <- simulate_sentence(start_token, M, M1, b)
 print(result)
+
+
+
+
