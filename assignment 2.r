@@ -113,10 +113,6 @@ nseir <- function(beta, h, alink, alpha = c(0.1, 0.01, 0.01), delta = 0.2,
 
 
 plot_seir <- function(seir_results, main = "SEIR Model Dynamics") {
-  # 参数:
-  #   seir_results: nseir函数返回的结果列表
-  #   main: 图形标题
-  
   # 提取数据
   S <- seir_results$S
   E <- seir_results$E
@@ -161,11 +157,6 @@ plot_seir <- function(seir_results, main = "SEIR Model Dynamics") {
 # 增强版绘图函数：支持多场景对比 
 plot_seir_comparison <- function(results_list, scenario_names = NULL, 
                                  main = "SEIR Model Comparison") {
-  # 参数:
-  #   results_list: 包含多个nseir结果的列表
-  #   scenario_names: 各场景的名称向量
-  #   main: 总标题
-  
   n_scenarios <- length(results_list)
   
   # 设置多图布局
@@ -187,8 +178,6 @@ plot_seir_comparison <- function(results_list, scenario_names = NULL,
 
 # 辅助函数：单面板绘图，用于多图布局
 plot_seir_single_panel <- function(seir_results, main = "") {
-  # 单面板绘图，用于多图布局中的每个子图
-  
   S <- seir_results$S
   E <- seir_results$E
   I <- seir_results$I
